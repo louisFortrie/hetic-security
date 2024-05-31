@@ -14,4 +14,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}          
     restart: always
-    
+    networks:
+      - sgbdr-network-prod
+      
+networks:
+  sgbdr-network-prod:
+    driver: bridge
+    name: sgbdr-network-prod
