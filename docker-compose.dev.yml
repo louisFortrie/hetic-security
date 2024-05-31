@@ -16,7 +16,7 @@ services:
     image: mariadb
     restart: always
     ports:
-      - "3379:3306"
+      - "3378:3306"
     environment: 
       - MYSQL_ALLOW_EMPTY_PASSWORD=false
       - MYSQL_ROOT_PASSWORD=rootpassword

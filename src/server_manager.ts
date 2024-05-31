@@ -9,7 +9,7 @@ import { requestLogMiddleware } from "./utility/Logging/log.middleware";
 
 export const StartServer = async () => {
   // Récupérer le port des variables d'environnement ou préciser une valeur par défaut
-  const PORT = process.env.PORT || 5050;
+  const PORT = process.env.PORT || 5055;
 
   // Créer l'objet Express
   const app = Express();

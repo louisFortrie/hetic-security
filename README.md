@@ -15,6 +15,8 @@ mycli -h dbms -u root < ./dbms/ddl/init.sql
 mycli -h dbms -u root school < ./dbms/ddl/ddl.sql
 ```
 
+Le mot de passe est `rootpassword`.
+
 Ensuite, on peut lancer le serveur avec :
 
 ```bash
@@ -24,7 +26,10 @@ npm install
 # A faire pour lancer l'API
 npm run server
 ```
-L'API écoute sur le port 5050.
+L'API écoute sur le port 5055.
+Le SGBDR (MariaDB) écoute sur le port 3378
+
+Testez une route dans un navigateur [http://localhost:5055/info](http://localhost:5055/info)
 
 ## En local : Instructions d'utilisation (sans DevContainer)
 
@@ -64,11 +69,19 @@ Ensuite, on peut lancer le serveur avec :
 # A faire une fois
 npm install
 
+# Créer des variables d'environnement
+export DB_HOST=127.0.0.1
+export DB_USER=VOTRE_UTILISATEUR_SQL
+export DB_PASSWORD=VOTRE_MOT_DE_PASSE_SQL
+export DB_DATABASE=LE_NOM_DE_VOTRE_BASE_DE_DONNEES
+
 # A faire pour lancer l'API
 npm run server
 ```
 
-L'API écoute sur le port 5050.
+L'API écoute sur le port 5055. 
+
+Testez une route dans un navigateur [http://localhost:5055/info](http://localhost:5055/info)
 
 ## Déploiement sur un serveur de production
 
@@ -90,7 +103,7 @@ Naviguez dans le répertoire racine de ce projet, et tapez :
 docker compose up -d
 ```
 
-Grâce au fichier `docker-compose.yml` le projet est construit et lancé en tant que container docker. L'API écoute sur le port 5050.
+Grâce au fichier `docker-compose.yml` le projet est construit et lancé en tant que container docker. L'API écoute sur le port 5055.
 
 Dans le cas d'une mise à jour de votre base de code :
 
