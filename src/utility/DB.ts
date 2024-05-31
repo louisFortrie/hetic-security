@@ -15,6 +15,7 @@ export class DB {
   static get Connection(): Pool {
     if (!this.POOL) {
       this.POOL = mysql.createPool({
+        port: parseInt(process.env.DB_PORT || '') || 3306,
         host: process.env.DB_HOST || 'dbms',
         user: process.env.DB_USER || 'api-dev',
         database: process.env.DB_DATABASE || 'school',

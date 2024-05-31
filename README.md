@@ -71,9 +71,10 @@ npm install
 
 # Créer des variables d'environnement
 export DB_HOST=127.0.0.1
-export DB_USER=VOTRE_UTILISATEUR_SQL
-export DB_PASSWORD=VOTRE_MOT_DE_PASSE_SQL
-export DB_DATABASE=LE_NOM_DE_VOTRE_BASE_DE_DONNEES
+export DB_USER=api-dev
+export DB_PASSWORD=api-dev-password
+export DB_DATABASE=school
+export DB_PORT=LE_PORT_ECOUTE_DE_VOTRE_SGBDR
 
 # A faire pour lancer l'API
 npm run server
@@ -135,6 +136,8 @@ export DB_HOST=127.0.0.1
 export DB_USER=VOTRE_UTILISATEUR_SQL
 export DB_PASSWORD=VOTRE_MOT_DE_PASSE_SQL
 export DB_DATABASE=LE_NOM_DE_VOTRE_BASE_DE_DONNEES
+export DB_PORT=LE_PORT_ECOUTE_DE_VOTRE_SGBDR
+
 
 # Relancer le container
 docker compose up -d
