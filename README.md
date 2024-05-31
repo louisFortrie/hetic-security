@@ -125,6 +125,24 @@ Avec votre client SQL :
 - créez un utilisateur, et lui accordez avec les bonnes privilèges.
 - initialiser le schéma avec [ce DDL](./dbms/ddl/ddl.sql)
 
+Nous supposons, pour cet example, que le SGBDR est un service sur la même machine, configuré avec un réseau comme décrit dans la documentation dessus  : 
+
+```yml
+services:
+  mon_sgbdr:
+    image: mariadb
+    ...
+
+networks:
+  sgbdr-network-prod:
+    driver: bridge
+    name: sgbdr-network-prod
+```
+
+Deux containers Docker peuvent se communiquer s'ils appartiennent au même réseau. Vous trouverez donc cette même configuration dans `docker-compose.yml`. Si vous avez modifié ses valeurs, n'oubliez pas de les modifier ici aussi !
+
+Ils s'adressent utilisant le **nom du service**. Dans notre cas, notre API va pouvoir addresser simplement le service `mon_sgbdr` au lieu de préciser une adresse IP dans `DB_HOST`. 
+
 Relancez l'API, cette fois si en précisant le valeurs secretes à utiliser pour connecter à la base de données via les variables d'environnement :
 
 ```bash
@@ -132,11 +150,10 @@ Relancez l'API, cette fois si en précisant le valeurs secretes à utiliser pour
 docker compose down
 
 # Créer des variables d'environnement
-export DB_HOST=127.0.0.1
+export DB_HOST=mon_sgbdr
 export DB_USER=VOTRE_UTILISATEUR_SQL
 export DB_PASSWORD=VOTRE_MOT_DE_PASSE_SQL
 export DB_DATABASE=LE_NOM_DE_VOTRE_BASE_DE_DONNEES
-export DB_PORT=LE_PORT_ECOUTE_DE_VOTRE_SGBDR
 
 
 # Relancer le container
