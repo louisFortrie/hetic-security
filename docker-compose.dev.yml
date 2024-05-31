@@ -1,12 +1,12 @@
 version: '3.9'
 
 services:
-  vscode_api:
-    image: rg.fr-par.scw.cloud/api-code-samples-vscode/vscode_api:1.0.0
+  vscode_security_api:
+    image: rg.fr-par.scw.cloud/devops-code-samples-vscode/vscode_api:2.0.0
     command: /bin/bash -c "while sleep 1000; do :; done"
     working_dir: /home/dev
     networks:
-      - api-network
+      - api-security-network
     volumes:
       - ./:/home/dev:cached
     labels:
@@ -16,7 +16,7 @@ services:
     image: mariadb
     restart: always
     ports:
-      - "3309:3306"
+      - "3379:3306"
     environment: 
       - MYSQL_ALLOW_EMPTY_PASSWORD=false
       - MYSQL_ROOT_PASSWORD=rootpassword
@@ -28,20 +28,9 @@ services:
       - ./dbms/dbms-data:/var/lib/mysql
       - ./dbms/mariadb.cnf:/etc/mysql/mariadb.cnf
     networks:
-      - api-network
-
-  proxy:
-    image: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
-    volumes:
-      - ./nginx/api-dev.nginx.conf:/etc/nginx/conf.d/api.nginx.conf
-    networks:
-      - api-network
+      - api-security-network
 
 networks:
-  api-network:
+  api-security-network:
     driver: bridge
-    name: api-network
+    name: api-security-network

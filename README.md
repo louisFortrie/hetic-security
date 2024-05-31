@@ -1,12 +1,14 @@
-# CI/CD Code Samples
+# Sécurité : Code Samples
 
-Un exemple de la procédure CI/CD avec un API en NodeJS.
+Un exemple à utiliser pour l'exercice Sécurité.
 
-## Instructions d'utilisation
+## En local : Instructions d'utilisation (avec VSCode DevContainer)
 
-Le projet est conçu pour un VSCode Dev Container. Relancez le projet dans un DevContainer, et ouvrez un terminal.
+Le projet est conçu pour un VSCode Dev Container. Instructions pour installer les dépendances et l'utiliser se trouvent [ici](https://docs.glassworks.tech/unix-shell/introduction/010-introduction/installation-party). Relancez le projet dans un DevContainer, et ouvrez un terminal.
 
-Avant de lancer le serveur il faut d'abord préparer la base de données :
+Le DevContainer s'occupe automatiquement de la création d'un SGBDR MariaDB  
+
+Avant de lancer le serveur il faut d'abord préparer la base de données, en tapant dans un terminal au sein du DevContainer :
 
 ```bash
 mycli -h dbms -u root < ./dbms/ddl/init.sql
@@ -16,35 +18,118 @@ mycli -h dbms -u root school < ./dbms/ddl/ddl.sql
 Ensuite, on peut lancer le serveur avec :
 
 ```bash
+# A faire une fois
+npm install
+
+# A faire pour lancer l'API
 npm run server
 ```
+L'API écoute sur le port 5050.
+
+## En local : Instructions d'utilisation (sans DevContainer)
+
+Il faut d'abord installer deux dépendances :
+-  [NodeJS](https://nodejs.org/en/download/package-manager)
+-  Un SGBDR compatible  MySQL :
+  - MacOS : [https://www.mamp.info/en/mamp/mac/](https://www.mamp.info/en/mamp/mac/)
+  - Windows : [https://www.wampserver.com/en/](https://www.wampserver.com/en/)
+  - [MariaDB](https://mariadb.com/downloads/)
+  - [MariaDB via Docker](https://docs.glassworks.tech/securite/securisation-des-services/010-sgbdr-docker#docker-compose.yml)
+- Un client SQL pour gérer votre base de données 
+  
+
+Avant de lancer le serveur il faut d'abord préparer la base de données:
+
+- Créer une `database` avec le nom `school`.
+
+```sql
+create database IF NOT EXISTS school;
+```
+
+- Créer un utilisateur `api-dev` avec le mot de passe `api-dev-password` :
+
+```sql
+create user IF NOT EXISTS 'api-dev'@'%.%.%.%' identified by 'api-dev-password';
+grant select, update, insert, delete on school.* to 'api-dev'@'%.%.%.%';
+flush privileges;
+```
+
+- Initialiser le schéma de la base de données grâce au fichier [DDL](./dbms/ddl/ddl.sql).
+
+Ensuite, dans un terminal, naviguer dans le répertoire racine de ce projet, et tapez :
+
+Ensuite, on peut lancer le serveur avec :
+
+```bash
+# A faire une fois
+npm install
+
+# A faire pour lancer l'API
+npm run server
+```
+
+L'API écoute sur le port 5050.
+
+## Déploiement sur un serveur de production
+
+Notre déploiement va être simple :
+
+- copier les codes sources sur le serveur de production
+- lancer l'api avec `docker compose`
+
+D'abord, si pas déjà fait sur votre VM, [installez Docker](https://docs.glassworks.tech/securite/securisation-des-services/010-sgbdr-docker).
+
+Copier ce projet sur votre serveur :
+
+- soit vous créez un compte GitHub, créez un projet, synchroniser le projet local, et le tirer sur la VM
+- soit vous copiez ce projet sur votre VM avec `scp`
+
+Naviguez dans le répertoire racine de ce projet, et tapez :
+
+```bash
+docker compose up -d
+```
+
+Grâce au fichier `docker-compose.yml` le projet est construit et lancé en tant que container docker. L'API écoute sur le port 5050.
+
+Dans le cas d'une mise à jour de votre base de code :
+
+```bash
+# Arreter le container
+docker compose down
+# Reconstruire le container
+docker compose build api
+# Relancer le container
+docker compose up -d
+```
+
+Certaines routes interrogent une base de données. Si pas déjà faites, [déployez un container MariaDB](https://docs.glassworks.tech/securite/securisation-des-services/010-sgbdr-docker#docker-compose.yml).
+
+Avec votre client SQL :
+
+- créez la base de données pour ce projet. Vous pouvez utiliser le nom que vous voulez.
+- créez un utilisateur, et lui accordez avec les bonnes privilèges.
+- initialiser le schéma avec [ce DDL](./dbms/ddl/ddl.sql)
+
+Relancez l'API, cette fois si en précisant le valeurs secretes à utiliser pour connecter à la base de données via les variables d'environnement :
+
+```bash
+# Arreter le container
+docker compose down
+
+# Créer des variables d'environnement
+export DB_HOST=127.0.0.1
+export DB_USER=VOTRE_UTILISATEUR_SQL
+export DB_PASSWORD=VOTRE_MOT_DE_PASSE_SQL
+export DB_DATABASE=LE_NOM_DE_VOTRE_BASE_DE_DONNEES
+
+# Relancer le container
+docker compose up -d
+```
+
 
 ## Tests Postman
 
 Un export des tests pour Postman se trouve dans [./src/test/postman/api.postman_collection.json](./src/test/postman/api.postman_collection.json)
 
 
-## Docker Registry
-
-Le container `vscode_api` utilise une image Docker personnalisé. Les instructions pour sa création et déploiement sont :
-
-```bash
-# Terminal ouvert à la racine de ce projet
-
-# Build l'image en local
-docker compose -f docker-compose.dev.yml build vscode_api
-
-# Trouver l'image
-docker image ls | grep "vscode_api"  
-
-# Retagger l'image avec l'adresse du repo at le numéro de version
-# Remplacer `api-code-samplesgit-vscode_api`  avec le bon nom d'image trouvé dans l'étape précédente
-docker tag api-code-samplesgit-vscode_api rg.fr-par.scw.cloud/api-code-samples-vscode/vscode_api:1.0.0
-
-# Créer une clé de connexion chez scaleway
-SCW_SECRET_KEY=
-docker login rg.fr-par.scw.cloud/api-code-samples-vscode -u nologin --password-stdin <<< "$SCW_SECRET_KEY"
-
-# Envoyer l'image dans le dépôt docker sur Scaleway
-docker push rg.fr-par.scw.cloud/api-code-samples-vscode/vscode_api:1.0.0
-``````

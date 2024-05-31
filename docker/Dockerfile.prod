@@ -1,11 +1,11 @@
-FROM node:18-alpine AS api-builder
+FROM node:20-alpine AS api-builder
 WORKDIR app
 COPY . .
 RUN npm install
 RUN npm run clean
 RUN npm run build
 
-FROM node:18-alpine AS api
+FROM node:20-alpine AS api
 WORKDIR app
 COPY --from=api-builder /app/build ./
 COPY package* ./

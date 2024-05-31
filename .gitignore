@@ -12,3 +12,4 @@
 /.myclirc
 /.nyc_output/
 /coverage/
+kubeconfig*.yml

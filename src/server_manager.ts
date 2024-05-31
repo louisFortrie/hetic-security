@@ -41,7 +41,7 @@ export const StartServer = async () => {
   // Demo endpoint pour retourner des infos du serveur
   app.get('/info', (req, res) => {
     res.json({
-      title: "CI/CD Code Samples API",
+      title: "Security Code Samples API",
       host: hostname(),
       platform: platform(),
       type: type()
