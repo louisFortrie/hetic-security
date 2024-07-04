@@ -16,6 +16,11 @@ create trigger before_insert_user
 before insert
 on user for each row set new.email = lower(trim(new.email));
 
+alter table user add column if not exists password varchar(256) not null;
+
+insert ignore into user (email, familyName, givenName, password) values ('bob@builder.com', 'Builder', 'Bob', 'mypassword');
+insert ignore into user (email, familyName, givenName, password) values ('sara@connor.com', 'Connor', 'Sara', 'mypassword');
+
 /* ... */
 
 
@@ -70,3 +75,5 @@ create table if not exists advert_view (
   foreign key(advertiserId) references advertiser(advertiserId),
   foreign key(userId) references user(userId)  
 );
+
+
