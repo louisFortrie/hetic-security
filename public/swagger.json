@@ -174,6 +174,48 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/advertiser": {
+			"post": {
+				"operationId": "GetAdvertisers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Récupérer une page d'annonceurs",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"columns": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"columns"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/auth/magic": {
 			"get": {
 				"operationId": "SendMagicLink",
