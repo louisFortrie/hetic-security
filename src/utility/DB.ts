@@ -24,7 +24,8 @@ export class DB {
         host: process.env.DB_HOST || 'dbms',
         user: process.env.DB_USER || 'api-dev',
         database: process.env.DB_DATABASE || 'school',
-        password: process.env.DB_PASSWORD || 'api-dev-password',  
+        password: process.env.DB_PASSWORD || 'api-dev-password', 
+        multipleStatements: true 
       });
     }
 
