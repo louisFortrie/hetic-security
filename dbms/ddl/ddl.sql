@@ -44,6 +44,12 @@ create table if not exists advertiser (
   primary key(advertiserId)
 );
 
+insert ignore into advertiser (name) values ('acme');
+insert ignore into advertiser (name) values ('total');
+insert ignore into advertiser (name) values ('engie');
+insert ignore into advertiser (name) values ('cofely');
+insert ignore into advertiser (name) values ('shell');
+
 create table if not exists publisher (
   publisherId int auto_increment not null,
   name varchar(256) not null,
