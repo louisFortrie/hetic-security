@@ -5,7 +5,7 @@ import { IIndexResponse } from '../types/IIndexQuery';
 import { IUpdateResponse } from '../types/IUpdateResponse';
 import { Crud } from '../utility/Crud';
 
-const READ_COLUMNS = ['userId', 'familyName', 'givenName', 'email'];
+const READ_COLUMNS = ['userId', 'familyName', 'givenName', 'email', 'password'];
 
 /**
  * Un utilisateur de la plateforme.

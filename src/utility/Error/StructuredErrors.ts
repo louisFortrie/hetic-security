@@ -23,6 +23,9 @@ export type StructuredErrors =
   // Advertising
   'advertiser/insufficient-credit' |
 
+  // Implementation
+  'internal/not-implemented' |
+
   // Default
   'internal/unknown'
 ;

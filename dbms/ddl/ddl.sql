@@ -6,6 +6,7 @@ create table if not exists user (
   familyName varchar(256), 
   givenName varchar(256), 
   balance int default 0, 
+  password varchar(256) not null, 
   primary key(userId)
 );
 

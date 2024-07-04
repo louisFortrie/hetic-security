@@ -6,6 +6,63 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"IAdvert": {
+				"description": "Une publicité",
+				"properties": {
+					"advertId": {
+						"type": "number",
+						"format": "double",
+						"description": "ID Unique"
+					},
+					"advertiserId": {
+						"type": "number",
+						"format": "double",
+						"description": "ID de l'annonceur à qui cette publicité appartient"
+					},
+					"price": {
+						"type": "number",
+						"format": "double",
+						"description": "Prix"
+					}
+				},
+				"required": [
+					"advertId",
+					"advertiserId",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IIndexResponse_IAdvert_": {
+				"properties": {
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"rows": {
+						"items": {
+							"$ref": "#/components/schemas/IAdvert"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"page",
+					"limit",
+					"total",
+					"rows"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IUser": {
 				"properties": {
 					"userId": {
@@ -24,12 +81,16 @@
 					"balance": {
 						"type": "number",
 						"format": "double"
+					},
+					"password": {
+						"type": "string"
 					}
 				},
 				"required": [
 					"userId",
 					"email",
-					"balance"
+					"balance",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -91,11 +152,15 @@
 					"balance": {
 						"type": "number",
 						"format": "double"
+					},
+					"password": {
+						"type": "string"
 					}
 				},
 				"required": [
 					"email",
-					"balance"
+					"balance",
+					"password"
 				],
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
@@ -146,6 +211,9 @@
 					"balance": {
 						"type": "number",
 						"format": "double"
+					},
+					"password": {
+						"type": "string"
 					}
 				},
 				"type": "object",
@@ -174,6 +242,49 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/advert": {
+			"get": {
+				"operationId": "GetAdverts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IIndexResponse_IAdvert_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupérer une page d'annonces",
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "La page (zéro-index) à récupérer",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Le nombre d'éléments à récupérer (max 50)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/advertiser": {
 			"post": {
 				"operationId": "GetAdvertisers",
@@ -216,22 +327,23 @@
 				}
 			}
 		},
-		"/auth/magic": {
-			"get": {
-				"operationId": "SendMagicLink",
+		"/auth/signup": {
+			"post": {
+				"operationId": "Signup",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "L'ID de l'utilisateur crée",
 						"content": {
 							"application/json": {
 								"schema": {
 									"properties": {
-										"ok": {
-											"type": "boolean"
+										"userId": {
+											"type": "number",
+											"format": "double"
 										}
 									},
 									"required": [
-										"ok"
+										"userId"
 									],
 									"type": "object"
 								}
@@ -239,22 +351,36 @@
 						}
 					}
 				},
+				"description": "Crée un nouvel utilisateur",
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "email",
-						"required": true,
-						"schema": {
-							"type": "string"
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email"
+								],
+								"type": "object"
+							}
 						}
 					}
-				]
+				}
 			}
 		},
 		"/auth/login": {
-			"get": {
-				"operationId": "LoginFromMaginLink",
+			"post": {
+				"operationId": "Login",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -262,24 +388,12 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"message": {
-											"type": "string"
-										},
-										"redirectTo": {
-											"type": "string"
-										},
-										"renew": {
-											"type": "string"
-										},
-										"access": {
+										"token": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"message",
-										"redirectTo",
-										"renew",
-										"access"
+										"token"
 									],
 									"type": "object"
 								}
@@ -287,17 +401,31 @@
 						}
 					}
 				},
+				"description": "Connexion d'un utilisateur. Devrait générer un JWT si l'utilisateur existe.",
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "jwt",
-						"required": true,
-						"schema": {
-							"type": "string"
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email"
+								],
+								"type": "object"
+							}
 						}
 					}
-				]
+				}
 			}
 		},
 		"/photos": {

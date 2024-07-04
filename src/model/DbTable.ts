@@ -1,4 +1,5 @@
 export type DbTable = 
   'user' |
-  'user_file'
+  'user_file' | 
+  'advert'
 ;

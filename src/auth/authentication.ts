@@ -3,7 +3,6 @@ import { ApiError } from '../utility/Error/ApiError';
 import { ErrorCode } from '../utility/Error/ErrorCode';
 import { IAccessToken } from '../types/auth/IAccessToken';
 import { JWT } from '../utility/JWT';
-import { ACCESS_AUD, ISSUER } from '../routes/AuthController';
 
 
 export async function expressAuthentication(
@@ -13,6 +12,7 @@ export async function expressAuthentication(
 ): Promise<boolean> {
 
   if (securityName === 'jwt') {
+    /*
     const authheader = request.headers.authorization || '';
     if (!authheader.startsWith('Bearer ')) {
       throw new ApiError(ErrorCode.Unauthorized, 'auth/missing-header', 'Missing authorization header with Bearer token');
@@ -44,6 +44,9 @@ export async function expressAuthentication(
     if (!decoded.userId) {
       throw new ApiError(ErrorCode.Unauthorized, 'auth/invalid-access-token', "userId was not found in the payload");
     }    
+    */
+
+    // @todo Validate the token here
 
     return true;
   }

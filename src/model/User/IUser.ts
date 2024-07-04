@@ -8,6 +8,7 @@ export interface IUser {
   givenName?: string;
   email: string;
   balance: number;
+  password: string;
 }
 
 // Outils de manipulation des types :
