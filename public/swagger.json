@@ -153,64 +153,6 @@
 			},
 			"IUserUpdate": {
 				"$ref": "#/components/schemas/Partial_IUserCreate_"
-			},
-			"IUserFile": {
-				"properties": {
-					"fileId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"storageKey": {
-						"type": "string"
-					},
-					"filename": {
-						"type": "string"
-					},
-					"mimeType": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"fileId",
-					"userId",
-					"storageKey"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IIndexResponse_IUserFile_": {
-				"properties": {
-					"page": {
-						"type": "number",
-						"format": "double"
-					},
-					"limit": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"rows": {
-						"items": {
-							"$ref": "#/components/schemas/IUserFile"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"page",
-					"limit",
-					"total",
-					"rows"
-				],
-				"type": "object",
-				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -314,6 +256,52 @@
 						}
 					}
 				]
+			}
+		},
+		"/photos": {
+			"post": {
+				"operationId": "ListPhotos",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"files": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"files"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Lister les photos sur le serveur",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"path": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/protected/user": {
@@ -664,33 +652,6 @@
 		},
 		"/user/{userId}/file": {
 			"post": {
-				"operationId": "UploadFile",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ICreateResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Envoyer un fichier",
-				"security": [],
-				"parameters": [
-					{
-						"description": "Le ID de l'utilisateur",
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
 				"requestBody": {
 					"content": {
 						"multipart/form-data": {
@@ -706,75 +667,6 @@
 						}
 					}
 				}
-			},
-			"get": {
-				"operationId": "ShowFiles",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IIndexResponse_IUserFile_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Récupérer une liste de fichiers d'un utilisateur",
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"description": "La page (zéro-index) à récupérer",
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"description": "Le nombre d'éléments à récupérer (max 50)",
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/user/{userId}/file/{fileId}": {
-			"get": {
-				"operationId": "DownloadFile",
-				"responses": {
-					"200": {
-						"description": "Chunked object stream"
-					}
-				},
-				"description": "Récupérer un fichier selon son ID. Le résultat est une série de messages (statut 200) contenant les contenus du fichier.",
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "fileId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
 			}
 		}
 	},

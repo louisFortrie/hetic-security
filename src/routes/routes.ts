@@ -5,11 +5,11 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './AuthController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PhotosController } from './PhotosController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProtectedUserController } from './protected/ProtectedUserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './UserController';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { UserFileController } from './UserFileController';
 import { expressAuthentication } from './../auth/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -83,29 +83,6 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"Partial_IUserCreate_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IUserFile": {
-        "dataType": "refObject",
-        "properties": {
-            "fileId": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
-            "storageKey": {"dataType":"string","required":true},
-            "filename": {"dataType":"string"},
-            "mimeType": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IIndexResponse_IUserFile_": {
-        "dataType": "refObject",
-        "properties": {
-            "page": {"dataType":"double","required":true},
-            "limit": {"dataType":"double","required":true},
-            "total": {"dataType":"double","required":true},
-            "rows": {"dataType":"array","array":{"dataType":"refObject","ref":"IUserFile"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -160,6 +137,31 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.loginFromMaginLink.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/photos',
+            ...(fetchMiddlewares<RequestHandler>(PhotosController)),
+            ...(fetchMiddlewares<RequestHandler>(PhotosController.prototype.listPhotos)),
+
+            function PhotosController_listPhotos(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"path":{"dataType":"string"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new PhotosController();
+
+
+              const promise = controller.listPhotos.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -420,85 +422,6 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.deleteUser.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/user/:userId/file',
-            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
-            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.uploadFile)),
-
-            function UserFileController_uploadFile(request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new UserFileController();
-
-
-              const promise = controller.uploadFile.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/user/:userId/file',
-            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
-            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.showFiles)),
-
-            function UserFileController_showFiles(request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-                    page: {"in":"query","name":"page","dataType":"string"},
-                    limit: {"in":"query","name":"limit","dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new UserFileController();
-
-
-              const promise = controller.showFiles.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/user/:userId/file/:fileId',
-            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
-            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.downloadFile)),
-
-            function UserFileController_downloadFile(request: any, response: any, next: any) {
-            const args = {
-                    fileId: {"in":"path","name":"fileId","required":true,"dataType":"double"},
-                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new UserFileController();
-
-
-              const promise = controller.downloadFile.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
