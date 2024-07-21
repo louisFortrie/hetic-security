@@ -10,8 +10,8 @@ services:
       - NODE_ENV=prod
       - PORT=5055
       - DB_HOST=mon_sgbdr
-      - DB_USER=utilisateur_challenge
-      - DB_PASSWORD=motdepassechallengecyber
+      - DB_USER=sec_challenge_user
+      - DB_PASSWORD=passwordchallenge
       - DB_DATABASE=nutrition
     restart: always
     networks:
