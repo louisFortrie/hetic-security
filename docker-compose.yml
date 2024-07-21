@@ -16,8 +16,6 @@ services:
     restart: always
     networks:
       - sgbdr-network-prod
-  mon_sgbdr:
-    image: mariadb
 
 networks:
   sgbdr-network-prod:
