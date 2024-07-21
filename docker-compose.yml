@@ -9,13 +9,16 @@ services:
     environment:
       - NODE_ENV=prod
       - PORT=5055
-      - DB_HOST=mon_sgbdr
+      - DB_HOST=127.0.0.1:3306
       - DB_USER=sec_challenge_user
       - DB_PASSWORD=passwordchallenge
       - DB_DATABASE=nutrition
     restart: always
     networks:
       - sgbdr-network-prod
+  mon_sgbdr:
+    image: mariadb
+
 networks:
   sgbdr-network-prod:
     driver: bridge
