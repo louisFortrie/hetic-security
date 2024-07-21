@@ -9,7 +9,7 @@ services:
     environment:
       - NODE_ENV=prod
       - PORT=5055
-      - DB_HOST=127.0.0.1:3306
+      - DB_HOST=172.31.35.118:3306
       - DB_USER=sec_challenge_user
       - DB_PASSWORD=passwordchallenge
       - DB_DATABASE=nutrition
